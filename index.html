@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    .outer{
+        padding:10px;
+        background-color: blue;
+    }
+    .inner{
+        padding:10px;
+        background-color: red;
+    }
+    </style>
+</head>
+<body>
+    <div class="outer">
+        <div class="inner">
+            <button>버튼</button>
+        </div>
+    </div>
+    <a href="https://google.com">구글</a>
+    <script>
+        document.querySelector('.outer').addEventListener('click', e => {
+            // e.currentTarget.classList.add('clicked');
+            // console.log(e.target); //실제로 클릭한 요소
+            // console.log(e.currentTarget); //eventListener를 등록한 요소
+            // alert('outer가 클릭되었습니다.');
+        });
+
+        document.querySelector('button').addEventListener('click', e => {
+            // alert('버튼이 클릭되었습니다.');
+            e.stopPropagation(); //이벤트전파 중단 -> outer이벤트 안일어남
+        })
+
+        document.querySelector('a').addEventListener('click', e => {
+            e.preventDefault(); //a태그의 링크로 연결기능 막음
+        })
+
+        // MouseEvent
+        const outer = document.querySelector('.outer');
+        outer.addEventListener('mousedown', e => {
+            console.log('mousedown');
+        })
+        outer.addEventListener('mouseup', e => {
+            console.log('mouseup');
+        })
+        document.addEventListener('mousemove', e => {
+            console.log(e.clientX, e.clientY);
+        })
+    </script>
+</body>
+</html>
