@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>debounce & throttle</title>
+</head>
+<body>
+    <input type="text" id="debounce">
+    <input type="text" id="throttle">
+    <div></div>
+    <script>
+
+    // #1. debounce
+
+    //input이벤트 : input 내용이 변경될때마다 이벤트 발생(mousemove와 비슷)
+    //input이 실행되는 순간 시작되면 되는 함수이므로, e 이벤트객체를 매게변수로 받아올 필요 없음
+    //mousemove같은 마우스위치를 받아와야하는 이벤트들은 e 이벤트 객체가 매게변수로 필요
+    //keydown이벤트는 어떤 keycode입력했는지 받아오는 e 이벤트객체 필요함
+    document.querySelector('#debounce').addEventListener('input', debounce(() => {alert('입력중');}, 2000));
+    function debounce(cb, time) {
+        let timeoutId;
+        return function () {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+            timeoutId = setTimeout(() => {
+                cb();
+                timeoutId = null;
+            }, time)
+        }
+    }
+    
+    // #2. throttle
+    
+    // 2초뒤에 말할 수 있는 채팅
+    document.querySelector('#throttle').addEventListener('keydown', e => {
+        // console.log('e:', e); //keyBoardEvent -> 어떤 키보드판을 입력했는지
+        // console.log('e.target:', e.target); //<input> -> e.target 이벤트 받은타겟
+        // console.log('e.currentTarget.value:', e.currentTarget);//<input> -> currentTarget 이벤트 리스너를 달아놓은 타겟. 
+
+        if(e.key === 'Enter'){
+            throttledAppendChat();
+        }
+    });
+    const throttledAppendChat = throttle(function () {
+        const chatInput = document.querySelector('#throttle');
+        const pEl = document.createElement('p');
+        pEl.textContent = chatInput.value;
+        document.querySelector('div').appendChild(pEl);
+        chatInput.value = "";
+    }, 2000);
+    
+
+
+    function delay(cb, time) {
+            return function () {
+                setTimeout(cb, time);
+            }
+        }
+
+    
+
+    function throttle(cb, time) {
+        let throttled = false;
+        let timeoutId;
+        return function () {
+            if (!timeoutId) {
+                timeoutId = setTimeout(() => {
+                    throttled = false;
+                    timeoutId = null;
+                }, time);
+            }
+            if (!throttled) {
+                cb();
+            }
+            throttled = true;
+        }
+    }
+    </script>
+</body>
+</html>
