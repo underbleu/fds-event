@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Debug</title>
+</head>
+<body>
+<script>
+    //콜스택 실행순서
+    //add2AndPrint() -> add23) -> add() -> add2() -> console.log -> add2AndPrint()
+    function add(x, y) {
+        debugger;
+        return x + y;
+    }
+    function add2(x) {
+        return add(x, 2); 
+    }
+    function add2AndPrint(x) {
+        const result = add2(x); 
+        console.log(result); 
+    }
+
+    add2AndPrint(3); 
+</script>
+</body>
+</html>
