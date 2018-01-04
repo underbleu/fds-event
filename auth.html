@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Firebase Auth</title>
+    <style>
+    .profile-img{
+        width: 150px;
+        height: 150px;
+    }
+    .display-name{
+        font-weight: 900;
+    }
+    .none{
+        display: none;
+    }
+    </style>
+</head>
+<body>
+    <p class="no-user">로그인 된 사용자가 없습니다.</p>
+    <button class="login">로그인</button>
+    <img src="" alt="" class="profile-img">
+    <div class="display-name"></div>
+    <div class="email"></div>
+    <ul class="repo-list"></ul>
+
+    <script src="https://www.gstatic.com/firebasejs/4.8.1/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "AIzaSyBuPm7MDXlMrvh4hMzrNHqaG1vwNVEnfLs",
+            authDomain: "underbleu-fire.firebaseapp.com",
+            databaseURL: "https://underbleu-fire.firebaseio.com",
+            projectId: "underbleu-fire",
+            storageBucket: "",
+            messagingSenderId: "394094451520"
+        };
+        firebase.initializeApp(config);
+    </script>
+    <script>
+    var provider = new firebase.auth.GithubAuthProvider();
+    document.querySelector('.login').addEventListener('click', async e => {
+        e.currentTarget.classList.add('none');
+        document.querySelector('.no-user').classList.add('none');
+        
+        firebase.auth().signInWithPopup(provider).then(async function (result) {
+            // This gives you a GitHub Access Token. You can use it to access the GitHub API.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            // ...
+            console.log(token);
+            console.log(user);
+            document.querySelector('.display-name').textContent = user.displayName;
+            document.querySelector('.email').textContent = user.email;
+            document.querySelector('.profile-img').src = user.photoURL; 
+
+            // OAUTH-TOKEN에 console에 찍힌 token을 입력해주자
+            // https://api.github.com/user/repos?access_token=OAUTH-TOKEN 
+            const res = await fetch(`https://api.github.com/user/repos?access_token=${token}`);
+            const repos = await res.json();
+            console.log(repos);
+
+            // 유저의 레포지토리 목록생성
+            repos.forEach(repo => {
+                const repoEl = document.createElement('li');
+                const repoURL = document.createElement('a');
+                repoEl.textContent = repo.full_name;
+                repoURL.textContent = repo.url;
+                document.querySelector('.repo-list').appendChild(repoEl).appendChild(repoURL);
+            })
+        })
+    })
+    </script>
+</body>
+</html>
