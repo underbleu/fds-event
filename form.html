@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Form</title>
+</head>
+<body>
+    <form method="POST" action="http://httpbin.org/post">
+        <input type="text" name="id">
+        <input type="password" name="password">
+        <input type="submit" value="전송">
+    </form>
+    <script>
+    document.querySelector('form').addEventListener('submit', e => {
+        const elements = e.currentTarget.elements;
+        //elements.id.value === "" 간략하게. 빈문자열은 falsy  
+        if(!elements.id.value || !elements.password.value){ 
+            alert('아이디와 비밀번호 모두 입력하시오');
+            e.preventDefault(); //submit의 기본기능인 "전송" 막기
+        }
+    })
+    </script>
+</body>
+</html>
