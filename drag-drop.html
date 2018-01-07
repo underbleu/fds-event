@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Drag & Drop</title>
     <style>
-    body{
+    html, body{
+        background-color: beige;
+        width: 100%;
+        height: 100%;
         margin: 0;
         padding: 0;
     }
@@ -30,31 +33,47 @@
 </head>
 <body>
     <div class="outer">
-        <div class="box">
-            bong
-        </div>
+        <div class="box"></div>
     </div>
     <script>
         let dragging = false;
         const box = document.querySelector('.box');
-        box.addEventListener('mousedown', e => {
+        const outer = document.querySelector('.outer');
+        const body = document.querySelector('html'); //html로잡아야 전체viewport에서 mouseup감지가능
+
+        //body->box로 바꿔도됨. 엘리먼트 outer로 안나가게 만들면
+        body.addEventListener('mousedown', e => {
             console.log('mousedown');
-            dragging = true;
+
             //클릭이 일어난 순간에 상대적 위치 저장
-            //el.offsetLeft, el.offsetTop
-            //el.getBoundingClientRect()
+            if(e.target === box){
+            dragging = true;
+            box.initialOffsetLeft = box.offsetLeft;
+            box.initialOffsetTop = box.offsetTop;
+            box.initialClientX = e.clientX;
+            box.initialClientY = e.clientY;
+            }
         })
-        box.addEventListener('mouseup', e => {
+
+        body.addEventListener('mouseup', e => {
             console.log('mouseup');
             dragging = false;
         })
-        box.addEventListener('mousemove', e => {
-            console.log(e);
-            if(dragging){
+
+        body.addEventListener('mousemove', e => {
+            
+            if(dragging &&
+                //e.clientX가 아닌 뭘로 수정해야할까
+                //box.getBoundingClientRect().left로 하면 벽에 닿았을때 다시는 못 옮김
+                e.clientX - outer.getBoundingClientRect().left >= outer.getBoundingClientRect().left &&
+                e.clientX < outer.getBoundingClientRect().right &&
+                e.clientY - outer.getBoundingClientRect().top >= outer.getBoundingClientRect().top &&
+                e.clientY < outer.getBoundingClientRect().bottom
+            ){
+                console.log(`e.clientX: ${e.clientX}`);
                 //상대적 위치를 유지하며 박스 위치 변경
-                console.log(e.clientY);
-                box.style.top = `${e.clientY - box.offsetTop - 50}px`;
-                box.style.left = `${e.clientX - box.offsetLeft - 50}px`;
+                box.style.top = `${box.initialOffsetTop + (e.clientY - box.initialClientY)}px`;
+                box.style.left = `${box.initialOffsetLeft + (e.clientX - box.initialClientX)}px`;
             }
         })
     </script>
