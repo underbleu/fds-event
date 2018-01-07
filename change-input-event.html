@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        .contenteditable{
+            background-color: #eee;
+            border: 1px solid #888;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <input type="text" class="input">
+    <div class="contenteditable" contenteditable></div>
+    <input type="text" class="change">
+    <input type="checkbox" class="checkbox">
+    <input type="text" class="focus">
+    <script>
+    
+    // 1. input이벤트 -> 값이 들어올때 마다 발생
+    document.querySelector('.input').addEventListener('input', e => {
+        console.log('input');
+    })
+
+    // 1-1. input이벤트 -> contenteditable속성 감지
+    document.querySelector('.contenteditable').addEventListener('input', e => {
+        console.log('contenteditable input');
+    }) 
+
+    // 2. change이벤트 -> input에서 포커스가 다른곳으로 이동할 때 발생
+    document.querySelector('.change').addEventListener('change', e => {
+        console.log('change');
+    })   
+
+    // 3. checkbox에서는 change이벤트만 감지한다
+    document.querySelector('.checkbox').addEventListener('change', e => {
+        console.log('checkbox change');
+    })   
+    document.querySelector('.checkbox').addEventListener('input', e => {
+        console.log('checkbox input');
+    })
+
+    // 4. foucus   
+    document.querySelector('.focus').addEventListener('focus', e => {
+        console.log('focus');
+    })   
+    // 5. blur
+    document.querySelector('.focus').addEventListener('blur', e => {
+        console.log('blur');
+    })  
+    
+    </script>
+</body>
+</html>
